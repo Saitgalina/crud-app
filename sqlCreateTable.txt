@@ -1,0 +1,25 @@
+CREATE TABLE users
+(
+    id serial not null unique,
+    login varchar(255) not null,
+    password varchar(255) not null,
+    name varchar(255) not null,
+    isAdmin bool not null
+);
+
+CREATE TABLE books
+(
+    id serial not null unique,
+    name varchar(255) not null ,
+    author varchar(255) not null ,
+    year varchar(255) not null ,
+    description varchar(255) not null ,
+    source varchar(255) not null
+);
+
+CREATE TABLE favourites
+(
+     id serial,
+     user_id int references users(id) on delete cascade not null ,
+     book_id int references books(id) on delete cascade not null
+);
