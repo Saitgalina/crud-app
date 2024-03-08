@@ -23,3 +23,15 @@ func (s *BookService) GetAllBooks() ([]model.Book, error) {
 func (s *BookService) GetByIdBook(idBook int) (model.Book, error) {
 	return s.repo.GetByIdBook(idBook)
 }
+
+func (s *BookService) GetByNameBook(nameBook string) ([]model.Book, error) {
+	return s.repo.GetByNameBook(nameBook)
+}
+
+func (s *BookService) GetByYearBook(yearBook string) ([]model.Book, error) {
+	return s.repo.GetByYearBook(yearBook)
+}
+
+func (s *BookService) GetByAuthorBook(authorBook string) ([]model.Book, error) {
+	return s.repo.GetByAuthorBook(authorBook)
+}

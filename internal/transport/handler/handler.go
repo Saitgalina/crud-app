@@ -26,7 +26,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			books.POST("/", h.createBook)
 			books.GET("/", h.getAllBooks)
-			books.GET("/:id", h.getBookById)
+			//books.GET("/name", h.getBookByName)
+			//books.GET("/:id", h.getBookById) //рабочий
 			//вызывают панику потому что "/:id" в этом месте можно писать только :id
 			//books.GET("/:name", h.getBookByName)
 			//books.GET("/:author", h.getBookByAuthor)

@@ -34,10 +34,42 @@ type getAllBooksResponse struct {
 }
 
 func (h *Handler) getAllBooks(c *gin.Context) {
-	books, err := h.services.Book.GetAllBooks()
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
+	fmt.Println("ВЫЗОВ getAllBooks")
+	var books []model.Book
+	if filterName := c.Query("name"); filterName != "" {
+		tmp, err := h.services.Book.GetByNameBook(filterName)
+		if err != nil {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+			return
+		}
+		books = tmp
+		fmt.Println("ВЫЗОВ getAllBooks with NAME")
+		fmt.Println(filterName)
+	} else if filterName := c.Query("year"); filterName != "" {
+		tmp, err := h.services.Book.GetByYearBook(filterName)
+		if err != nil {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+			return
+		}
+		books = tmp
+		fmt.Println("ВЫЗОВ getAllBooks with YEAR")
+		fmt.Println(filterName)
+	} else if filterName := c.Query("author"); filterName != "" {
+		tmp, err := h.services.Book.GetByAuthorBook(filterName)
+		if err != nil {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+			return
+		}
+		books = tmp
+		fmt.Println("ВЫЗОВ getAllBooks with YEAR")
+		fmt.Println(filterName)
+	} else {
+		tmp, err := h.services.Book.GetAllBooks()
+		if err != nil {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+			return
+		}
+		books = tmp
 	}
 	c.JSON(http.StatusOK, getAllBooksResponse{
 		Data: books,
@@ -61,6 +93,7 @@ func (h *Handler) getBookById(c *gin.Context) {
 }
 
 func (h *Handler) getBookByName(c *gin.Context) {
+	fmt.Println("ВЫЗОВ getBookByName")
 
 }
 func (h *Handler) getBookByAuthor(c *gin.Context) {

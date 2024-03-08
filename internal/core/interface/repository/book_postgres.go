@@ -55,3 +55,35 @@ func (r *BookPostgres) GetByIdBook(idBook int) (model.Book, error) {
 	err := r.db.Get(&book, query, idBook)
 	return book, err
 }
+
+func (r *BookPostgres) GetByNameBook(nameBook string) ([]model.Book, error) {
+	var books []model.Book
+	pattern := fmt.Sprintf("%s%s%s", "%", nameBook, "%")
+	query := fmt.Sprintf("SELECT id, name, author,year, description, source FROM %s WHERE  lower(name) LIKE lower($1)", booksTable)
+	err := r.db.Select(&books, query, pattern)
+	return books, err
+}
+
+func (r *BookPostgres) GetByYearBook(yearBook string) ([]model.Book, error) {
+	var books []model.Book
+	pattern := fmt.Sprintf("%s%s%s", "%", yearBook, "%")
+	query := fmt.Sprintf("SELECT id, name, author,year, description, source FROM %s WHERE  lower(year) LIKE lower($1)", booksTable)
+	err := r.db.Select(&books, query, pattern)
+	fmt.Println(books)
+	fmt.Println(pattern)
+	fmt.Println(yearBook)
+
+	return books, err
+}
+
+func (r *BookPostgres) GetByAuthorBook(authorBook string) ([]model.Book, error) {
+	var books []model.Book
+	pattern := fmt.Sprintf("%s%s%s", "%", authorBook, "%")
+	query := fmt.Sprintf("SELECT id, name, author,year, description, source FROM %s WHERE  lower(author) LIKE lower($1)", booksTable)
+	err := r.db.Select(&books, query, pattern)
+	fmt.Println(books)
+	fmt.Println(pattern)
+	fmt.Println(authorBook)
+
+	return books, err
+}

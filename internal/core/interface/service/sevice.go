@@ -15,6 +15,9 @@ type Book interface {
 	CreateBook(userId int, book model.Book) (int, error)
 	GetAllBooks() ([]model.Book, error)
 	GetByIdBook(idBook int) (model.Book, error)
+	GetByNameBook(nameBook string) ([]model.Book, error)
+	GetByYearBook(yearBook string) ([]model.Book, error)
+	GetByAuthorBook(authorBook string) ([]model.Book, error)
 }
 
 type Sevice struct {
