@@ -35,3 +35,9 @@ func (s *BookService) GetByYearBook(yearBook string) ([]model.Book, error) {
 func (s *BookService) GetByAuthorBook(authorBook string) ([]model.Book, error) {
 	return s.repo.GetByAuthorBook(authorBook)
 }
+func (s *BookService) GetSortDescBook(valueSort string) ([]model.Book, error) {
+	return s.repo.GetSortDescBook(valueSort)
+}
+func (s *BookService) GetSortAscBook(valueSort string) ([]model.Book, error) {
+	return s.repo.GetSortAscBook(valueSort)
+}

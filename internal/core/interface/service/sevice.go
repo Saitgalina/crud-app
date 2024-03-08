@@ -18,6 +18,8 @@ type Book interface {
 	GetByNameBook(nameBook string) ([]model.Book, error)
 	GetByYearBook(yearBook string) ([]model.Book, error)
 	GetByAuthorBook(authorBook string) ([]model.Book, error)
+	GetSortDescBook(valueSort string) ([]model.Book, error)
+	GetSortAscBook(valueSort string) ([]model.Book, error)
 }
 
 type Sevice struct {

@@ -87,3 +87,16 @@ func (r *BookPostgres) GetByAuthorBook(authorBook string) ([]model.Book, error) 
 
 	return books, err
 }
+
+func (r *BookPostgres) GetSortDescBook(valueSort string) ([]model.Book, error) {
+	var books []model.Book
+	query := fmt.Sprintf("SELECT id, name, author,year, description, source FROM %s ORDER BY %s desc", booksTable, valueSort)
+	err := r.db.Select(&books, query)
+	return books, err
+}
+func (r *BookPostgres) GetSortAscBook(valueSort string) ([]model.Book, error) {
+	var books []model.Book
+	query := fmt.Sprintf("SELECT id, name, author,year, description, source FROM %s ORDER BY %s asc", booksTable, valueSort)
+	err := r.db.Select(&books, query)
+	return books, err
+}

@@ -5,7 +5,6 @@ import (
 	"github.com/Saitgalina/crud-app/internal/core/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 )
 
 func (h *Handler) createBook(c *gin.Context) {
@@ -35,6 +34,18 @@ type getAllBooksResponse struct {
 
 func (h *Handler) getAllBooks(c *gin.Context) {
 	fmt.Println("ВЫЗОВ getAllBooks")
+	books, err := h.services.Book.GetAllBooks()
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, getAllBooksResponse{
+		Data: books,
+	})
+}
+
+func (h *Handler) getFilterBooks(c *gin.Context) {
+	fmt.Println("ВЫЗОВ filter")
 	var books []model.Book
 	if filterName := c.Query("name"); filterName != "" {
 		tmp, err := h.services.Book.GetByNameBook(filterName)
@@ -43,7 +54,7 @@ func (h *Handler) getAllBooks(c *gin.Context) {
 			return
 		}
 		books = tmp
-		fmt.Println("ВЫЗОВ getAllBooks with NAME")
+		fmt.Println("ВЫЗОВ filter with NAME")
 		fmt.Println(filterName)
 	} else if filterName := c.Query("year"); filterName != "" {
 		tmp, err := h.services.Book.GetByYearBook(filterName)
@@ -52,7 +63,7 @@ func (h *Handler) getAllBooks(c *gin.Context) {
 			return
 		}
 		books = tmp
-		fmt.Println("ВЫЗОВ getAllBooks with YEAR")
+		fmt.Println("ВЫЗОВ filter with YEAR")
 		fmt.Println(filterName)
 	} else if filterName := c.Query("author"); filterName != "" {
 		tmp, err := h.services.Book.GetByAuthorBook(filterName)
@@ -61,41 +72,37 @@ func (h *Handler) getAllBooks(c *gin.Context) {
 			return
 		}
 		books = tmp
-		fmt.Println("ВЫЗОВ getAllBooks with YEAR")
+		fmt.Println("ВЫЗОВ filter with YEAR")
 		fmt.Println(filterName)
-	} else {
-		tmp, err := h.services.Book.GetAllBooks()
-		if err != nil {
-			newErrorResponse(c, http.StatusInternalServerError, err.Error())
-			return
-		}
-		books = tmp
 	}
 	c.JSON(http.StatusOK, getAllBooksResponse{
 		Data: books,
 	})
 }
 
-func (h *Handler) getBookById(c *gin.Context) {
-	idBook, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		newErrorResponse(c, http.StatusBadRequest, "invalid id param")
-		return
+func (h *Handler) getSortBooks(c *gin.Context) {
+	fmt.Println("ВЫЗОВ sort")
+	var books []model.Book
+	if filterName := c.Query("desc"); filterName != "" {
+		tmp, err := h.services.Book.GetSortDescBook(filterName)
+		if err != nil {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+			return
+		}
+		books = tmp
+		fmt.Println("ВЫЗОВ sort DESC END")
+		fmt.Println(filterName)
+	} else if filterName := c.Query("asc"); filterName != "" {
+		tmp, err := h.services.Book.GetSortAscBook(filterName)
+		if err != nil {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+			return
+		}
+		books = tmp
+		fmt.Println("ВЫЗОВ sort ASC END")
+		fmt.Println(filterName)
 	}
-
-	book, err := h.services.Book.GetByIdBook(idBook)
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-	fmt.Println("book_handler after ")
-	c.JSON(http.StatusOK, book)
-}
-
-func (h *Handler) getBookByName(c *gin.Context) {
-	fmt.Println("ВЫЗОВ getBookByName")
-
-}
-func (h *Handler) getBookByAuthor(c *gin.Context) {
-
+	c.JSON(http.StatusOK, getAllBooksResponse{
+		Data: books,
+	})
 }
