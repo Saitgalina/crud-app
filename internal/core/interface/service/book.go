@@ -41,3 +41,11 @@ func (s *BookService) GetSortDescBook(valueSort string) ([]model.Book, error) {
 func (s *BookService) GetSortAscBook(valueSort string) ([]model.Book, error) {
 	return s.repo.GetSortAscBook(valueSort)
 }
+
+func (s *BookService) AddFavouritesBook(idBook, idUser int) (string, error) {
+	return s.repo.AddFavouritesBook(idBook, idUser)
+}
+
+func (s *BookService) GetFavouritesBooks(idUser int) ([]model.Book, error) {
+	return s.repo.GetFavouritesBooks(idUser)
+}

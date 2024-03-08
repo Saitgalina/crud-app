@@ -10,7 +10,7 @@ type Book struct {
 }
 
 type Favourites struct {
-	Id     int
-	UserId int
-	BookId int
+	Id     int `json:"id" db:"id"`
+	UserId int `json:"user_id" db:"user_id"`
+	BookId int `json:"book_id" db:"book_id"`
 }

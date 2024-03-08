@@ -20,6 +20,8 @@ type Book interface {
 	GetByAuthorBook(authorBook string) ([]model.Book, error)
 	GetSortDescBook(valueSort string) ([]model.Book, error)
 	GetSortAscBook(valueSort string) ([]model.Book, error)
+	AddFavouritesBook(idBook, idUser int) (string, error)
+	GetFavouritesBooks(idUser int) ([]model.Book, error)
 }
 
 type Sevice struct {

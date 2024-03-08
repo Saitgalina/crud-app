@@ -48,14 +48,12 @@ func (r *BookPostgres) GetAllBooks() ([]model.Book, error) {
 	err := r.db.Select(&books, query)
 	return books, err
 }
-
 func (r *BookPostgres) GetByIdBook(idBook int) (model.Book, error) {
 	var book model.Book
 	query := fmt.Sprintf("SELECT id, name, author,year, description, source FROM %s WHERE id=$1", booksTable)
 	err := r.db.Get(&book, query, idBook)
 	return book, err
 }
-
 func (r *BookPostgres) GetByNameBook(nameBook string) ([]model.Book, error) {
 	var books []model.Book
 	pattern := fmt.Sprintf("%s%s%s", "%", nameBook, "%")
@@ -63,7 +61,6 @@ func (r *BookPostgres) GetByNameBook(nameBook string) ([]model.Book, error) {
 	err := r.db.Select(&books, query, pattern)
 	return books, err
 }
-
 func (r *BookPostgres) GetByYearBook(yearBook string) ([]model.Book, error) {
 	var books []model.Book
 	pattern := fmt.Sprintf("%s%s%s", "%", yearBook, "%")
@@ -75,7 +72,6 @@ func (r *BookPostgres) GetByYearBook(yearBook string) ([]model.Book, error) {
 
 	return books, err
 }
-
 func (r *BookPostgres) GetByAuthorBook(authorBook string) ([]model.Book, error) {
 	var books []model.Book
 	pattern := fmt.Sprintf("%s%s%s", "%", authorBook, "%")
@@ -87,7 +83,6 @@ func (r *BookPostgres) GetByAuthorBook(authorBook string) ([]model.Book, error) 
 
 	return books, err
 }
-
 func (r *BookPostgres) GetSortDescBook(valueSort string) ([]model.Book, error) {
 	var books []model.Book
 	query := fmt.Sprintf("SELECT id, name, author,year, description, source FROM %s ORDER BY %s desc", booksTable, valueSort)
@@ -98,5 +93,26 @@ func (r *BookPostgres) GetSortAscBook(valueSort string) ([]model.Book, error) {
 	var books []model.Book
 	query := fmt.Sprintf("SELECT id, name, author,year, description, source FROM %s ORDER BY %s asc", booksTable, valueSort)
 	err := r.db.Select(&books, query)
+	return books, err
+}
+
+func (r *BookPostgres) AddFavouritesBook(idBook, idUser int) (string, error) {
+	tx, err := r.db.Begin()
+	if err != nil {
+		return "unsuccessful db Begin", err
+	}
+	query := fmt.Sprintf("INSERT INTO %s (user_id, book_id) VALUES ($1, $2) RETURNING id", favouritesTable)
+	rowAddFavouriteBook := tx.QueryRow(query, idUser, idBook)
+	if err := rowAddFavouriteBook.Scan(&idBook); err != nil {
+		tx.Rollback()
+		return "unsuccessful db INSERT", err
+	}
+	return fmt.Sprintf("the book %d has been added to favorites", idBook), tx.Commit()
+}
+
+func (r *BookPostgres) GetFavouritesBooks(idUser int) ([]model.Book, error) {
+	var books []model.Book
+	query := fmt.Sprintf("SELECT bt.id, bt.name, bt.author, bt.year, bt.description, bt.source FROM %s bt INNER JOIN %s ft on bt.id = ft.book_id WHERE ft.user_id = $1", booksTable, favouritesTable)
+	err := r.db.Select(&books, query, idUser)
 	return books, err
 }

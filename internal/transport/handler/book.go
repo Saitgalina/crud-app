@@ -5,6 +5,7 @@ import (
 	"github.com/Saitgalina/crud-app/internal/core/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func (h *Handler) createBook(c *gin.Context) {
@@ -101,7 +102,55 @@ func (h *Handler) getSortBooks(c *gin.Context) {
 		books = tmp
 		fmt.Println("ВЫЗОВ sort ASC END")
 		fmt.Println(filterName)
+	} else {
+		newErrorResponse(c, http.StatusBadRequest, "pass to the parameter asc or desc")
+		return
 	}
+	c.JSON(http.StatusOK, getAllBooksResponse{
+		Data: books,
+	})
+}
+
+type getAddFavouriteBookResponse struct {
+	Mess string `json:"mess"`
+}
+
+func (h *Handler) addFavouriteBook(c *gin.Context) {
+	fmt.Println("ВЫЗОВ getFavouritesBooks")
+	idUser, err := GetUserId(c)
+	if err != nil {
+		return
+	}
+	idBook, err_b := strconv.Atoi(c.Param("id"))
+	if err_b != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
+	message, err := h.services.Book.AddFavouritesBook(idBook, idUser)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	fmt.Println("ВЫЗОВ getFavouritesBooks END")
+
+	c.JSON(http.StatusOK, getAddFavouriteBookResponse{
+		Mess: message,
+	})
+}
+
+func (h *Handler) GetFavouritesBooks(c *gin.Context) {
+	fmt.Println("ВЫЗОВ GetFavouritesBooks")
+	idUser, err := GetUserId(c)
+	if err != nil {
+		return
+	}
+	books, err := h.services.Book.GetFavouritesBooks(idUser)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	fmt.Println("ВЫЗОВ GetFavouritesBooks END")
+
 	c.JSON(http.StatusOK, getAllBooksResponse{
 		Data: books,
 	})

@@ -28,6 +28,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			books.GET("/", h.getAllBooks)
 			books.GET("/filter", h.getFilterBooks)
 			books.GET("/sort", h.getSortBooks)
+			books.GET("/favourites", h.GetFavouritesBooks)
+			books.POST("/favourites/:id", h.addFavouriteBook)
 			//books.GET("/name", h.getBookByName)
 			//books.GET("/:id", h.getBookById) //рабочий
 			//вызывают панику потому что "/:id" в этом месте можно писать только :id
