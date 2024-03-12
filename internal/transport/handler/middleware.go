@@ -2,7 +2,6 @@ package handler
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
@@ -20,7 +19,6 @@ func (h *Handler) userIdentity(ctx *gin.Context) {
 		return
 	}
 	headerParts := strings.Split(header, " ")
-	fmt.Println("HEADERS", headerParts)
 	if len(headerParts) != 2 {
 		newErrorResponse(ctx, http.StatusUnauthorized, "invalid auth header")
 		return

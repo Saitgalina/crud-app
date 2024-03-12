@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/Saitgalina/crud-app/internal/core/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -34,7 +33,6 @@ type getAllBooksResponse struct {
 }
 
 func (h *Handler) getAllBooks(c *gin.Context) {
-	fmt.Println("ВЫЗОВ getAllBooks")
 	books, err := h.services.Book.GetAllBooks()
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -46,7 +44,6 @@ func (h *Handler) getAllBooks(c *gin.Context) {
 }
 
 func (h *Handler) getFilterBooks(c *gin.Context) {
-	fmt.Println("ВЫЗОВ filter")
 	var books []model.Book
 	if filterName := c.Query("name"); filterName != "" {
 		tmp, err := h.services.Book.GetByNameBook(filterName)
@@ -55,8 +52,6 @@ func (h *Handler) getFilterBooks(c *gin.Context) {
 			return
 		}
 		books = tmp
-		fmt.Println("ВЫЗОВ filter with NAME")
-		fmt.Println(filterName)
 	} else if filterName := c.Query("year"); filterName != "" {
 		tmp, err := h.services.Book.GetByYearBook(filterName)
 		if err != nil {
@@ -64,8 +59,6 @@ func (h *Handler) getFilterBooks(c *gin.Context) {
 			return
 		}
 		books = tmp
-		fmt.Println("ВЫЗОВ filter with YEAR")
-		fmt.Println(filterName)
 	} else if filterName := c.Query("author"); filterName != "" {
 		tmp, err := h.services.Book.GetByAuthorBook(filterName)
 		if err != nil {
@@ -73,8 +66,6 @@ func (h *Handler) getFilterBooks(c *gin.Context) {
 			return
 		}
 		books = tmp
-		fmt.Println("ВЫЗОВ filter with YEAR")
-		fmt.Println(filterName)
 	}
 	c.JSON(http.StatusOK, getAllBooksResponse{
 		Data: books,
@@ -82,7 +73,6 @@ func (h *Handler) getFilterBooks(c *gin.Context) {
 }
 
 func (h *Handler) getSortBooks(c *gin.Context) {
-	fmt.Println("ВЫЗОВ sort")
 	var books []model.Book
 	if filterName := c.Query("desc"); filterName != "" {
 		tmp, err := h.services.Book.GetSortDescBook(filterName)
@@ -91,8 +81,6 @@ func (h *Handler) getSortBooks(c *gin.Context) {
 			return
 		}
 		books = tmp
-		fmt.Println("ВЫЗОВ sort DESC END")
-		fmt.Println(filterName)
 	} else if filterName := c.Query("asc"); filterName != "" {
 		tmp, err := h.services.Book.GetSortAscBook(filterName)
 		if err != nil {
@@ -100,8 +88,6 @@ func (h *Handler) getSortBooks(c *gin.Context) {
 			return
 		}
 		books = tmp
-		fmt.Println("ВЫЗОВ sort ASC END")
-		fmt.Println(filterName)
 	} else {
 		newErrorResponse(c, http.StatusBadRequest, "pass to the parameter asc or desc")
 		return
@@ -116,7 +102,6 @@ type getAddFavouriteBookResponse struct {
 }
 
 func (h *Handler) addFavouriteBook(c *gin.Context) {
-	fmt.Println("ВЫЗОВ getFavouritesBooks")
 	idUser, err := GetUserId(c)
 	if err != nil {
 		return
@@ -131,7 +116,6 @@ func (h *Handler) addFavouriteBook(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	fmt.Println("ВЫЗОВ getFavouritesBooks END")
 
 	c.JSON(http.StatusOK, getAddFavouriteBookResponse{
 		Mess: message,
@@ -139,7 +123,6 @@ func (h *Handler) addFavouriteBook(c *gin.Context) {
 }
 
 func (h *Handler) GetFavouritesBooks(c *gin.Context) {
-	fmt.Println("ВЫЗОВ GetFavouritesBooks")
 	idUser, err := GetUserId(c)
 	if err != nil {
 		return
@@ -149,8 +132,6 @@ func (h *Handler) GetFavouritesBooks(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	fmt.Println("ВЫЗОВ GetFavouritesBooks END")
-
 	c.JSON(http.StatusOK, getAllBooksResponse{
 		Data: books,
 	})

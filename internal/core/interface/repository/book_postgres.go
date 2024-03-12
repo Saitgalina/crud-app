@@ -101,9 +101,10 @@ func (r *BookPostgres) AddFavouritesBook(idBook, idUser int) (string, error) {
 	if err != nil {
 		return "unsuccessful db Begin", err
 	}
+	var idFavorites int
 	query := fmt.Sprintf("INSERT INTO %s (user_id, book_id) VALUES ($1, $2) RETURNING id", favouritesTable)
 	rowAddFavouriteBook := tx.QueryRow(query, idUser, idBook)
-	if err := rowAddFavouriteBook.Scan(&idBook); err != nil {
+	if err := rowAddFavouriteBook.Scan(&idFavorites); err != nil {
 		tx.Rollback()
 		return "unsuccessful db INSERT", err
 	}

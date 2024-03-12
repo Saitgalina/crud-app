@@ -35,8 +35,6 @@ func (s *AuthService) CreateUser(user model.User) (int, error) {
 }
 
 func (s *AuthService) GenerateToken(login, password string) (string, error) {
-	fmt.Println("GENERATE TOKEN")
-	fmt.Println(login, password)
 	user, err := s.repo.GetUser(login, generatePasswordHash(password))
 	if err != nil {
 		return "", err
@@ -48,9 +46,6 @@ func (s *AuthService) GenerateToken(login, password string) (string, error) {
 		},
 		user.Id,
 	})
-	fmt.Println("TOKEN END")
-	fmt.Println(token)
-	fmt.Println(token.SignedString([]byte(signingKey)))
 	return token.SignedString([]byte(signingKey))
 }
 
@@ -75,6 +70,5 @@ func (s *AuthService) ParseToken(accessToken string) (int, error) {
 func generatePasswordHash(password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))
-
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }
